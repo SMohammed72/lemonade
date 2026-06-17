@@ -8,31 +8,35 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html, body {
+      width: 8.5in;
+      height: 11in;
+      overflow: hidden;
+    }
+
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: #e0e0e0;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      min-height: 100vh;
-      padding: 24px;
     }
 
-    @media print {
-      body { background: none; padding: 0; }
+    @media screen {
+      html, body { background: #ccc; height: auto; min-height: 11in; padding: 20px; }
     }
 
     /* ── Poster shell ── */
     .poster {
       width: 8.5in;
-      min-height: 11in;
+      height: 11in;
       background: linear-gradient(155deg, #fff176 0%, #FFD700 38%, #FFA500 78%, #e65100 100%);
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 0.38in 0.55in 0.32in;
+      padding: 0.22in 0.5in 0.18in;
       box-shadow: 0 10px 60px rgba(0,0,0,0.35);
     }
 
@@ -43,15 +47,15 @@
       opacity: 0.12;
       pointer-events: none;
     }
-    .deco-circle.c1 { width:5in; height:5in; top:-2.2in; left:-1.8in; background:#fff; }
+    .deco-circle.c1 { width:5in; height:5in; top:-2.4in; left:-1.8in; background:#fff; }
     .deco-circle.c2 { width:4in; height:4in; bottom:-1.8in; right:-1.5in; background:#fff; }
-    .deco-circle.c3 { width:2in; height:2in; top:3.5in; right:-0.5in; background:#fff; }
+    .deco-circle.c3 { width:2in; height:2in; top:3.8in; right:-0.5in; background:#fff; }
 
-    /* ── Lemon strip top ── */
+    /* ── Lemon strip ── */
     .lemon-row {
-      font-size: 1.8rem;
-      letter-spacing: 0.18in;
-      margin-bottom: 0.12in;
+      font-size: 1.55rem;
+      letter-spacing: 0.16in;
+      margin-bottom: 0.08in;
       z-index: 1;
     }
 
@@ -59,76 +63,68 @@
     .title-block {
       text-align: center;
       z-index: 1;
-      margin-bottom: 0.16in;
+      margin-bottom: 0.1in;
     }
-
     .title-top {
-      font-size: 0.52in;
+      font-size: 0.46in;
       font-weight: 900;
       color: #5c1a00;
-      letter-spacing: 0.01in;
-      text-shadow: 2px 3px 0 rgba(0,0,0,0.15);
+      text-shadow: 2px 3px 0 rgba(0,0,0,0.12);
       line-height: 1.1;
     }
-
     .title-sub {
-      font-size: 0.88in;
+      font-size: 0.78in;
       font-weight: 900;
       color: #fff;
       letter-spacing: -0.01in;
-      text-shadow:
-        3px 4px 0 #b34700,
-        6px 7px 0 rgba(0,0,0,0.15);
+      text-shadow: 3px 4px 0 #b34700, 6px 7px 0 rgba(0,0,0,0.13);
       line-height: 1;
     }
 
-    /* ── One-day banner ── */
+    /* ── Banner ── */
     .banner {
       background: #5c1a00;
       color: #FFD700;
-      font-size: 0.28in;
+      font-size: 0.22in;
       font-weight: 800;
-      letter-spacing: 0.06in;
+      letter-spacing: 0.055in;
       text-transform: uppercase;
-      padding: 0.1in 0.5in;
+      padding: 0.08in 0.44in;
       border-radius: 99in;
-      margin-bottom: 0.22in;
+      margin-bottom: 0.14in;
       z-index: 1;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.22);
     }
 
     /* ── Info row ── */
     .info-row {
       display: flex;
-      gap: 0.18in;
-      margin-bottom: 0.24in;
+      gap: 0.14in;
+      margin-bottom: 0.15in;
       z-index: 1;
       width: 100%;
       justify-content: center;
     }
-
     .info-box {
       background: rgba(92,26,0,0.75);
       color: #fff;
-      border-radius: 0.16in;
-      padding: 0.14in 0.22in;
+      border-radius: 0.13in;
+      padding: 0.1in 0.18in;
       text-align: center;
       flex: 1;
-      max-width: 2.5in;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+      max-width: 2.4in;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.22);
     }
-
     .info-label {
-      font-size: 0.11in;
+      font-size: 0.1in;
       font-weight: 700;
-      letter-spacing: 0.04in;
+      letter-spacing: 0.035in;
       text-transform: uppercase;
       color: #FFD700;
-      margin-bottom: 0.04in;
+      margin-bottom: 0.03in;
     }
-
     .info-value {
-      font-size: 0.2in;
+      font-size: 0.18in;
       font-weight: 700;
       line-height: 1.25;
     }
@@ -140,35 +136,30 @@
       flex-direction: column;
       align-items: center;
       background: rgba(255,255,255,0.92);
-      border-radius: 0.22in;
-      padding: 0.28in 0.36in 0.22in;
-      box-shadow:
-        0 8px 32px rgba(0,0,0,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.9);
-      margin-bottom: 0.22in;
+      border-radius: 0.18in;
+      padding: 0.18in 0.3in 0.16in;
+      box-shadow: 0 6px 28px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.9);
+      margin-bottom: 0.15in;
     }
-
     .qr-label-top {
-      font-size: 0.17in;
+      font-size: 0.15in;
       font-weight: 700;
       color: #b34700;
       letter-spacing: 0.02in;
       text-transform: uppercase;
-      margin-bottom: 0.14in;
+      margin-bottom: 0.1in;
     }
-
     .qr-img {
-      width: 2.9in;
-      height: 2.9in;
+      width: 2.55in;
+      height: 2.55in;
       display: block;
-      border: 0.06in solid #fff7e0;
-      border-radius: 0.1in;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      border: 0.05in solid #fff7e0;
+      border-radius: 0.08in;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-
     .qr-url {
-      margin-top: 0.12in;
-      font-size: 0.13in;
+      margin-top: 0.09in;
+      font-size: 0.12in;
       color: #7c3000;
       font-weight: 600;
       letter-spacing: 0.01in;
@@ -178,43 +169,39 @@
     .price-callout {
       z-index: 1;
       background: #fff;
-      border-radius: 0.16in;
-      padding: 0.14in 0.5in;
-      margin-bottom: 0.18in;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      border-radius: 0.13in;
+      padding: 0.09in 0.44in;
+      margin-bottom: 0.13in;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.16);
       text-align: center;
     }
-
     .price-big {
-      font-size: 0.5in;
+      font-size: 0.44in;
       font-weight: 900;
       color: #e65100;
       line-height: 1;
     }
-
     .price-tag {
-      font-size: 0.18in;
+      font-size: 0.15in;
       font-weight: 700;
       color: #7c3000;
-      letter-spacing: 0.01in;
     }
 
     /* ── Menu chips ── */
     .menu-chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.1in;
+      gap: 0.08in;
       justify-content: center;
       z-index: 1;
-      margin-bottom: 0.2in;
+      margin-bottom: 0.14in;
     }
-
     .chip {
       background: rgba(92,26,0,0.72);
       color: #fff;
       border-radius: 99in;
-      padding: 0.06in 0.18in;
-      font-size: 0.15in;
+      padding: 0.05in 0.16in;
+      font-size: 0.13in;
       font-weight: 600;
     }
 
@@ -223,36 +210,30 @@
       z-index: 1;
       text-align: center;
       color: rgba(92,26,0,0.8);
-      font-size: 0.13in;
+      font-size: 0.12in;
       font-weight: 600;
-      letter-spacing: 0.02in;
-      border-top: 1px solid rgba(92,26,0,0.25);
+      letter-spacing: 0.018in;
+      border-top: 1px solid rgba(92,26,0,0.22);
       width: 100%;
-      padding-top: 0.1in;
+      padding-top: 0.09in;
     }
   </style>
 </head>
 <body>
   <div class="poster">
-
-    <!-- Decorative blobs -->
     <div class="deco-circle c1"></div>
     <div class="deco-circle c2"></div>
     <div class="deco-circle c3"></div>
 
-    <!-- Lemons -->
     <div class="lemon-row">🍋 🍋 🍋 🍋 🍋</div>
 
-    <!-- Title -->
     <div class="title-block">
       <div class="title-top">Ashaz &amp; Arya's</div>
       <div class="title-sub">Lemonade Stand</div>
     </div>
 
-    <!-- One day only -->
     <div class="banner">⭐ One Day Only ⭐</div>
 
-    <!-- Date / Time / Location -->
     <div class="info-row">
       <div class="info-box">
         <div class="info-label">📅 Date</div>
@@ -268,20 +249,17 @@
       </div>
     </div>
 
-    <!-- QR code -->
     <div class="qr-section">
       <div class="qr-label-top">📱 Scan for menu &amp; directions</div>
       <img class="qr-img" src="data:image/png;base64,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" alt="QR Code"/>
       <div class="qr-url">smohammed72.github.io/lemonade</div>
     </div>
 
-    <!-- Price -->
     <div class="price-callout">
-      <div class="price-big">Everything  !</div>
+      <div class="price-big">Everything $1 !</div>
       <div class="price-tag">Lemonade · Snacks · Cookies · Ice Cream</div>
     </div>
 
-    <!-- Menu chips -->
     <div class="menu-chips">
       <span class="chip">🍋 Classic Lemonade</span>
       <span class="chip">🫐 Raspberry Lemonade</span>
@@ -291,11 +269,9 @@
       <span class="chip">🍫 Chocolate Ice Cream Scoop</span>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
       Benches at Onyx Rock Park &nbsp;·&nbsp; Dublin, California &nbsp;·&nbsp; P564+JXR
     </div>
-
   </div>
 </body>
 </html>
