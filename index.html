@@ -10,83 +10,69 @@
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
-      color: #fff;
       overflow-x: hidden;
+      color: #3b1a00;
     }
 
-    #vanta-bg {
+    /* ── Animated canvas background ── */
+    #bg-canvas {
       position: fixed;
       inset: 0;
       z-index: -1;
+      width: 100%;
+      height: 100%;
     }
 
     /* ── Header ── */
     header {
       position: relative;
       width: 100%;
-      padding: 36px 24px 30px;
+      padding: 36px 24px 28px;
       text-align: center;
-      background: rgba(4, 4, 18, 0.35);
-      backdrop-filter: blur(16px) saturate(160%);
-      -webkit-backdrop-filter: blur(16px) saturate(160%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-
-    .header-glow {
-      position: absolute;
-      top: -60%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 340px;
-      background: radial-gradient(ellipse, rgba(249,168,37,0.18) 0%, transparent 70%);
-      pointer-events: none;
-      animation: pulse-glow 4s ease-in-out infinite;
-    }
-
-    @keyframes pulse-glow {
-      0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
-      50%       { opacity: 1;   transform: translateX(-50%) scale(1.12); }
+      background: rgba(255, 230, 80, 0.28);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border-bottom: 1px solid rgba(255, 200, 0, 0.35);
+      box-shadow: 0 4px 30px rgba(255, 160, 0, 0.2);
     }
 
     .lemon-banner {
       font-size: 2.4rem;
       letter-spacing: 10px;
       margin-bottom: 12px;
-      animation: float 3.5s ease-in-out infinite;
       display: inline-block;
+      animation: float 3.5s ease-in-out infinite;
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-9px); }
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
     }
 
     header h1 {
-      font-size: 2.9rem;
+      font-size: 2.8rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      background: linear-gradient(90deg, #ffd700, #ffb347, #ff8fab, #a8edea, #ffd700);
-      background-size: 300% 100%;
+      background: linear-gradient(90deg, #b34700, #e65c00, #c8960c, #b34700);
+      background-size: 250% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: shimmer 5s linear infinite;
+      letter-spacing: 0.5px;
     }
 
     @keyframes shimmer {
       0%   { background-position: 0% 50%; }
-      100% { background-position: 300% 50%; }
+      100% { background-position: 250% 50%; }
     }
 
     header p.tagline {
-      margin-top: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
       letter-spacing: 3.5px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(120, 60, 0, 0.7);
     }
 
     /* ── Main ── */
@@ -96,50 +82,48 @@
       padding: 44px 20px 64px;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 22px;
     }
 
-    /* ── Glass card ── */
+    /* ── Glass card — light variant ── */
     .card {
-      background: rgba(255, 255, 255, 0.065);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(26px) saturate(180%);
+      -webkit-backdrop-filter: blur(26px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.75);
       border-radius: 26px;
-      padding: 32px 36px;
+      padding: 30px 34px;
       box-shadow:
-        0 8px 40px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        0 8px 40px rgba(200, 120, 0, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
       position: relative;
       overflow: hidden;
       opacity: 0;
-      transform: translateY(36px);
+      transform: translateY(32px);
     }
 
-    /* Subtle shimmer line on top edge */
     .card::before {
       content: '';
       position: absolute;
       top: 0; left: 10%; right: 10%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
     }
 
     .card h2 {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      color: #ffd700;
-      margin-bottom: 18px;
+      color: #c66000;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 10px;
       letter-spacing: 0.3px;
-      text-shadow: 0 0 20px rgba(255,215,0,0.4);
     }
 
     .card p, .card li {
       font-size: 1rem;
-      color: rgba(255, 255, 255, 0.82);
+      color: #4a2000;
       line-height: 1.78;
     }
 
@@ -151,32 +135,32 @@
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
 
     .info-item {
-      background: rgba(255, 255, 255, 0.055);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 220, 80, 0.2);
+      border: 1px solid rgba(255, 200, 0, 0.3);
       border-radius: 16px;
-      padding: 16px 18px;
+      padding: 15px 18px;
       transition: background 0.25s;
     }
 
-    .info-item:hover { background: rgba(255,255,255,0.1); }
+    .info-item:hover { background: rgba(255, 220, 80, 0.35); }
 
     .info-item .label {
       font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 2px;
-      color: #ffd700;
-      margin-bottom: 5px;
+      color: #c66000;
+      margin-bottom: 4px;
     }
 
     .info-item .value {
       font-size: 1rem;
       font-weight: 600;
-      color: #fff;
+      color: #3b1a00;
     }
 
     /* ── Menu ── */
@@ -185,7 +169,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 13px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
       transition: padding-left 0.2s;
     }
 
@@ -194,7 +178,7 @@
 
     .menu-item .name {
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
+      color: #3b1a00;
       font-size: 1rem;
     }
 
@@ -205,7 +189,7 @@
       border-radius: 99px;
       font-weight: 700;
       font-size: 0.9rem;
-      box-shadow: 0 3px 16px rgba(249, 168, 37, 0.45);
+      box-shadow: 0 3px 14px rgba(249, 120, 37, 0.4);
       white-space: nowrap;
     }
 
@@ -216,7 +200,7 @@
       display: flex;
       justify-content: center;
       gap: 48px;
-      margin-top: 22px;
+      margin-top: 20px;
       flex-wrap: wrap;
     }
 
@@ -224,7 +208,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .host-avatar {
@@ -232,73 +216,62 @@
       height: 78px;
       border-radius: 50%;
       overflow: hidden;
-      border: 2px solid rgba(255, 215, 0, 0.5);
+      border: 2.5px solid rgba(249, 168, 37, 0.7);
       box-shadow:
-        0 0 0 4px rgba(249,168,37,0.12),
-        0 0 30px rgba(249,168,37,0.35),
-        0 0 70px rgba(249,168,37,0.15);
+        0 0 0 4px rgba(249,168,37,0.15),
+        0 0 24px rgba(249,168,37,0.4);
       animation: avatar-pulse 3.5s ease-in-out infinite;
     }
 
     @keyframes avatar-pulse {
-      0%, 100% { box-shadow: 0 0 0 4px rgba(249,168,37,0.12), 0 0 30px rgba(249,168,37,0.35), 0 0 70px rgba(249,168,37,0.15); }
-      50%       { box-shadow: 0 0 0 6px rgba(249,168,37,0.22), 0 0 44px rgba(249,168,37,0.5),  0 0 90px rgba(249,168,37,0.25); }
+      0%, 100% { box-shadow: 0 0 0 4px rgba(249,168,37,0.15), 0 0 24px rgba(249,168,37,0.4); }
+      50%       { box-shadow: 0 0 0 7px rgba(249,168,37,0.22), 0 0 40px rgba(249,168,37,0.55); }
     }
 
-    .host-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .host-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
     .host-name {
       font-weight: 700;
-      font-size: 1.1rem;
-      color: #ffd700;
+      font-size: 1rem;
+      color: #c66000;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      text-shadow: 0 0 16px rgba(255,215,0,0.5);
     }
 
     .host-desc {
-      margin-top: 20px;
-      color: rgba(255, 255, 255, 0.75);
-      font-size: 0.98rem;
+      margin-top: 18px;
+      color: #5c3000;
+      font-size: 0.97rem;
       line-height: 1.75;
     }
 
     /* ── Footer ── */
     footer {
       width: 100%;
-      background: rgba(4, 4, 18, 0.5);
+      background: rgba(255, 220, 80, 0.22);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      border-top: 1px solid rgba(255, 200, 0, 0.3);
       text-align: center;
       padding: 22px 20px;
       font-size: 0.88rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: #7c4000;
     }
 
-    footer strong {
-      color: #ffd700;
-      font-size: 0.98rem;
-      text-shadow: 0 0 12px rgba(255,215,0,0.4);
-    }
+    footer strong { color: #c66000; font-size: 0.98rem; }
 
     @media (max-width: 600px) {
       header h1 { font-size: 2rem; }
       .info-grid { grid-template-columns: 1fr; }
-      .card { padding: 24px 22px; }
+      .card { padding: 22px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <div id="vanta-bg"></div>
+  <canvas id="bg-canvas"></canvas>
 
   <header>
-    <div class="header-glow"></div>
     <div class="lemon-banner">🍋🍋🍋</div>
     <h1>Ashaz &amp; Arya's Lemonade Stand</h1>
     <p class="tagline">Fresh-squeezed fun &nbsp;·&nbsp; Onyx Rock Park, Dublin</p>
@@ -369,48 +342,198 @@
     Onyx Rock Park &nbsp;·&nbsp; Dublin, CA &nbsp;·&nbsp; Come say hi!
   </footer>
 
-  <!-- Three.js (r134 — Vanta dependency) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <!-- Vanta HALO -->
-  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.halo.min.js"></script>
-  <!-- GSAP + ScrollTrigger -->
+  <!-- GSAP for card entrance animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <script>
-    // Mesmerizing HALO background
-    VANTA.HALO({
-      el: "#vanta-bg",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200,
-      minWidth: 200,
-      backgroundColor: 0x05050f,
-      baseColor: 0xf9a825,
-      size: 2.0,
-      amplitudeFactor: 2.8,
-      xOffset: 0.0,
-      yOffset: 0.05
-    });
+  // ─────────────────────────────────────────────
+  //  LEMONADE CANVAS ANIMATION
+  //  • Animated warm gradient background
+  //  • Rising bubbles (like carbonation)
+  //  • Floating lemon slice outlines
+  // ─────────────────────────────────────────────
+  (function () {
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
 
-    // Card entrance animations
-    gsap.registerPlugin(ScrollTrigger);
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
-    gsap.utils.toArray(".card").forEach((card, i) => {
-      gsap.to(card, {
-        scrollTrigger: {
-          trigger: card,
-          start: "top 88%",
-          toggleActions: "play none none none"
-        },
-        opacity: 1,
-        y: 0,
-        duration: 0.75,
-        delay: i * 0.08,
-        ease: "power3.out"
-      });
+    // ── Gradient background ──────────────────
+    function drawBackground(t) {
+      const s = (Math.sin(t * 0.0004) + 1) / 2;          // 0→1 slowly
+      const c1 = `hsl(${50 + s * 8}, 100%, ${72 + s * 6}%)`;   // bright lemon
+      const c2 = `hsl(${38 + s * 10}, 98%, ${62 + s * 6}%)`;   // golden
+      const c3 = `hsl(${28 + s * 8},  94%, ${56 + s * 5}%)`;   // warm amber
+
+      const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      g.addColorStop(0,   c1);
+      g.addColorStop(0.5, c2);
+      g.addColorStop(1,   c3);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // ── Bubbles ──────────────────────────────
+    class Bubble {
+      constructor() { this.init(true); }
+
+      init(randomY = false) {
+        this.r  = Math.random() * 22 + 6;
+        this.x  = Math.random() * canvas.width;
+        this.y  = randomY
+          ? Math.random() * canvas.height
+          : canvas.height + this.r + 10;
+        this.vy    = Math.random() * 0.7 + 0.25;
+        this.vx    = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.35 + 0.08;
+        this.phase = Math.random() * Math.PI * 2;
+        this.freq  = Math.random() * 0.012 + 0.004;
+      }
+
+      update() {
+        this.phase += this.freq;
+        this.x += Math.sin(this.phase) * 0.7 + this.vx;
+        this.y -= this.vy;
+        if (this.y < -this.r * 3) this.init(false);
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+
+        // Bubble body
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.18)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Specular highlight
+        ctx.beginPath();
+        ctx.arc(
+          this.x - this.r * 0.32,
+          this.y - this.r * 0.32,
+          this.r * 0.22,
+          0, Math.PI * 2
+        );
+        ctx.fillStyle = 'rgba(255,255,255,0.75)';
+        ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    // ── Lemon slices ─────────────────────────
+    class LemonSlice {
+      constructor() { this.init(true); }
+
+      init(randomY = false) {
+        this.r     = Math.random() * 38 + 28;
+        this.x     = Math.random() * canvas.width;
+        this.y     = randomY
+          ? Math.random() * canvas.height
+          : canvas.height + this.r + 10;
+        this.rot   = Math.random() * Math.PI * 2;
+        this.drot  = (Math.random() - 0.5) * 0.003;
+        this.vy    = Math.random() * 0.35 + 0.1;
+        this.alpha = Math.random() * 0.22 + 0.07;
+        this.segs  = 8;
+      }
+
+      update() {
+        this.y   -= this.vy;
+        this.rot += this.drot;
+        if (this.y < -this.r * 3) this.init(false);
+      }
+
+      draw() {
+        const { x, y, r, rot, alpha, segs } = this;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+
+        // Outer ring
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.fill();
+
+        // Inner pulp ring
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.78, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Segments
+        for (let i = 0; i < segs; i++) {
+          const a = (i / segs) * Math.PI * 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(Math.cos(a) * r * 0.78, Math.sin(a) * r * 0.78);
+          ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+
+        // Center pip
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.1, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    const BUBBLE_COUNT = 60;
+    const SLICE_COUNT  = 10;
+    const bubbles = Array.from({ length: BUBBLE_COUNT }, () => new Bubble());
+    const slices  = Array.from({ length: SLICE_COUNT  }, () => new LemonSlice());
+
+    function loop(t) {
+      drawBackground(t);
+
+      slices.forEach(s  => { s.update(); s.draw(); });
+      bubbles.forEach(b => { b.update(); b.draw(); });
+
+      requestAnimationFrame(loop);
+    }
+
+    requestAnimationFrame(loop);
+  })();
+
+  // ─────────────────────────────────────────────
+  //  GSAP card entrance animations
+  // ─────────────────────────────────────────────
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('.card').forEach((card, i) => {
+    gsap.to(card, {
+      scrollTrigger: {
+        trigger: card,
+        start: 'top 88%',
+        toggleActions: 'play none none none'
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      delay: i * 0.07,
+      ease: 'power3.out'
     });
+  });
   </script>
 
 </body>
