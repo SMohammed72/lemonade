@@ -87,10 +87,10 @@
 
     /* ── Glass card — light variant ── */
     .card {
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(10px) saturate(140%);
-      -webkit-backdrop-filter: blur(10px) saturate(140%);
-      border: 1px solid rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(6px) saturate(120%);
+      -webkit-backdrop-filter: blur(6px) saturate(120%);
+      border: 1px solid rgba(255, 255, 255, 0.35);
       border-radius: 26px;
       padding: 30px 34px;
       box-shadow:
@@ -139,8 +139,8 @@
     }
 
     .info-item {
-      background: rgba(255, 220, 80, 0.12);
-      border: 1px solid rgba(255, 200, 0, 0.22);
+      background: rgba(255, 220, 80, 0.07);
+      border: 1px solid rgba(255, 200, 0, 0.18);
       border-radius: 16px;
       padding: 15px 18px;
       transition: background 0.25s;
@@ -358,12 +358,12 @@
   // ─────────────────────────────────────────────
   //  LEMONADE CANVAS ANIMATION
   //  • Animated warm gradient background
-  //  • Rising bubbles (like carbonation)
+  //  • Rising bubbles — tap/click to pop!
   //  • Floating lemon slice outlines
   // ─────────────────────────────────────────────
   (function () {
     const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx    = canvas.getContext('2d');
 
     function resize() {
       canvas.width  = window.innerWidth;
@@ -372,14 +372,13 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // ── Gradient background ──────────────────
+    // ── Animated gradient background ─────────
     function drawBackground(t) {
-      const s = (Math.sin(t * 0.0004) + 1) / 2;          // 0→1 slowly
-      const c1 = `hsl(${50 + s * 8}, 100%, ${72 + s * 6}%)`;   // bright lemon
-      const c2 = `hsl(${38 + s * 10}, 98%, ${62 + s * 6}%)`;   // golden
-      const c3 = `hsl(${28 + s * 8},  94%, ${56 + s * 5}%)`;   // warm amber
-
-      const g = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      const s  = (Math.sin(t * 0.0004) + 1) / 2;
+      const c1 = `hsl(${50 + s * 8},  100%, ${72 + s * 6}%)`;
+      const c2 = `hsl(${38 + s * 10},  98%, ${62 + s * 6}%)`;
+      const c3 = `hsl(${28 + s * 8},   94%, ${56 + s * 5}%)`;
+      const g  = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
       g.addColorStop(0,   c1);
       g.addColorStop(0.5, c2);
       g.addColorStop(1,   c3);
@@ -387,14 +386,14 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    // ── Bubbles ──────────────────────────────
+    // ── Bubble ───────────────────────────────
     class Bubble {
       constructor() { this.init(true); }
 
       init(randomY = false) {
-        this.r  = Math.random() * 28 + 10;
-        this.x  = Math.random() * canvas.width;
-        this.y  = randomY
+        this.r     = Math.random() * 28 + 10;
+        this.x     = Math.random() * canvas.width;
+        this.y     = randomY
           ? Math.random() * canvas.height
           : canvas.height + this.r + 10;
         this.vy    = Math.random() * 0.7 + 0.25;
@@ -402,6 +401,7 @@
         this.alpha = Math.random() * 0.35 + 0.45;
         this.phase = Math.random() * Math.PI * 2;
         this.freq  = Math.random() * 0.012 + 0.004;
+        this.popping = false;
       }
 
       update() {
@@ -415,13 +415,12 @@
         ctx.save();
         ctx.globalAlpha = this.alpha;
 
-        // Bubble body
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.38)';
+        ctx.fillStyle   = 'rgba(255,255,255,0.38)';
         ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,0.95)';
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth   = 2.5;
         ctx.stroke();
 
         // Specular highlight
@@ -429,31 +428,85 @@
         ctx.arc(
           this.x - this.r * 0.32,
           this.y - this.r * 0.32,
-          this.r * 0.28,
-          0, Math.PI * 2
+          this.r * 0.28, 0, Math.PI * 2
         );
         ctx.fillStyle = 'rgba(255,255,255,0.95)';
         ctx.fill();
 
         ctx.restore();
       }
+
+      hits(px, py) {
+        const dx = px - this.x, dy = py - this.y;
+        return Math.sqrt(dx * dx + dy * dy) <= this.r + 8;
+      }
     }
 
-    // ── Lemon slices ─────────────────────────
+    // ── Pop effect ───────────────────────────
+    class PopEffect {
+      constructor(x, y, r) {
+        this.x    = x;
+        this.y    = y;
+        this.baseR = r;
+        this.ring  = r;
+        this.alpha = 1;
+        this.done  = false;
+        // Splash droplets flying outward
+        this.drops = Array.from({ length: 10 }, () => ({
+          angle : Math.random() * Math.PI * 2,
+          speed : Math.random() * 4 + 2,
+          dist  : r * 0.3,
+          size  : Math.random() * 5 + 2,
+        }));
+      }
+
+      update() {
+        this.ring  += this.baseR * 0.18;
+        this.alpha -= 0.055;
+        this.drops.forEach(d => { d.dist += d.speed; d.speed *= 0.92; });
+        if (this.alpha <= 0) this.done = true;
+      }
+
+      draw() {
+        if (this.alpha <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+
+        // Expanding ring
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.ring, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.lineWidth   = 2.5;
+        ctx.stroke();
+
+        // Droplets
+        this.drops.forEach(d => {
+          const px = this.x + Math.cos(d.angle) * d.dist;
+          const py = this.y + Math.sin(d.angle) * d.dist;
+          ctx.beginPath();
+          ctx.arc(px, py, Math.max(0.5, d.size * this.alpha), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.88)';
+          ctx.fill();
+        });
+
+        ctx.restore();
+      }
+    }
+
+    // ── Lemon slice ──────────────────────────
     class LemonSlice {
       constructor() { this.init(true); }
 
       init(randomY = false) {
-        this.r     = Math.random() * 38 + 28;
-        this.x     = Math.random() * canvas.width;
-        this.y     = randomY
+        this.r    = Math.random() * 38 + 28;
+        this.x    = Math.random() * canvas.width;
+        this.y    = randomY
           ? Math.random() * canvas.height
           : canvas.height + this.r + 10;
-        this.rot   = Math.random() * Math.PI * 2;
-        this.drot  = (Math.random() - 0.5) * 0.003;
-        this.vy    = Math.random() * 0.35 + 0.1;
+        this.rot  = Math.random() * Math.PI * 2;
+        this.drot = (Math.random() - 0.5) * 0.003;
+        this.vy   = Math.random() * 0.35 + 0.1;
         this.alpha = Math.random() * 0.22 + 0.07;
-        this.segs  = 8;
       }
 
       update() {
@@ -463,40 +516,36 @@
       }
 
       draw() {
-        const { x, y, r, rot, alpha, segs } = this;
+        const { x, y, r, rot, alpha } = this;
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.translate(x, y);
         ctx.rotate(rot);
 
-        // Outer ring
         ctx.beginPath();
         ctx.arc(0, 0, r, 0, Math.PI * 2);
         ctx.strokeStyle = 'rgba(255,255,255,0.55)';
-        ctx.lineWidth = 2;
+        ctx.lineWidth   = 2;
         ctx.stroke();
-        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.fillStyle   = 'rgba(255,255,255,0.06)';
         ctx.fill();
 
-        // Inner pulp ring
         ctx.beginPath();
         ctx.arc(0, 0, r * 0.78, 0, Math.PI * 2);
         ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 1;
+        ctx.lineWidth   = 1;
         ctx.stroke();
 
-        // Segments
-        for (let i = 0; i < segs; i++) {
-          const a = (i / segs) * Math.PI * 2;
+        for (let i = 0; i < 8; i++) {
+          const a = (i / 8) * Math.PI * 2;
           ctx.beginPath();
           ctx.moveTo(0, 0);
           ctx.lineTo(Math.cos(a) * r * 0.78, Math.sin(a) * r * 0.78);
           ctx.strokeStyle = 'rgba(255,255,255,0.22)';
-          ctx.lineWidth = 1;
+          ctx.lineWidth   = 1;
           ctx.stroke();
         }
 
-        // Center pip
         ctx.beginPath();
         ctx.arc(0, 0, r * 0.1, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255,255,255,0.4)';
@@ -506,16 +555,37 @@
       }
     }
 
-    const BUBBLE_COUNT = 60;
-    const SLICE_COUNT  = 10;
-    const bubbles = Array.from({ length: BUBBLE_COUNT }, () => new Bubble());
-    const slices  = Array.from({ length: SLICE_COUNT  }, () => new LemonSlice());
+    const bubbles = Array.from({ length: 60 }, () => new Bubble());
+    const slices  = Array.from({ length: 10 }, () => new LemonSlice());
+    const pops    = [];
 
+    // ── Interaction — pop a bubble ────────────
+    function tryPop(px, py) {
+      for (const b of bubbles) {
+        if (b.hits(px, py)) {
+          pops.push(new PopEffect(b.x, b.y, b.r));
+          b.init(false);   // respawn at bottom
+          break;
+        }
+      }
+    }
+
+    document.addEventListener('click',      e => tryPop(e.clientX, e.clientY));
+    document.addEventListener('touchstart', e => {
+      tryPop(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+
+    // ── Render loop ──────────────────────────
     function loop(t) {
       drawBackground(t);
-
-      slices.forEach(s  => { s.update(); s.draw(); });
+      slices.forEach(s => { s.update(); s.draw(); });
       bubbles.forEach(b => { b.update(); b.draw(); });
+
+      for (let i = pops.length - 1; i >= 0; i--) {
+        pops[i].update();
+        pops[i].draw();
+        if (pops[i].done) pops.splice(i, 1);
+      }
 
       requestAnimationFrame(loop);
     }
