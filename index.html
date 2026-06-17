@@ -398,9 +398,10 @@
           : canvas.height + this.r + 10;
         this.vy    = Math.random() * 0.7 + 0.25;
         this.vx    = (Math.random() - 0.5) * 0.3;
-        this.alpha = Math.random() * 0.35 + 0.45;
+        this.alpha = Math.random() * 0.3 + 0.5;
         this.phase = Math.random() * Math.PI * 2;
         this.freq  = Math.random() * 0.012 + 0.004;
+        this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
         this.popping = false;
       }
 
@@ -417,20 +418,20 @@
 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle   = 'rgba(255,255,255,0.38)';
+        ctx.fillStyle   = this.color.fill;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+        ctx.strokeStyle = this.color.stroke;
         ctx.lineWidth   = 2.5;
         ctx.stroke();
 
-        // Specular highlight
+        // Specular highlight (always white for glass effect)
         ctx.beginPath();
         ctx.arc(
           this.x - this.r * 0.32,
           this.y - this.r * 0.32,
           this.r * 0.28, 0, Math.PI * 2
         );
-        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
         ctx.fill();
 
         ctx.restore();
@@ -444,13 +445,14 @@
 
     // ── Pop effect ───────────────────────────
     class PopEffect {
-      constructor(x, y, r) {
+      constructor(x, y, r, color) {
         this.x    = x;
         this.y    = y;
         this.baseR = r;
         this.ring  = r;
         this.alpha = 1;
         this.done  = false;
+        this.color = color;
         // Splash droplets flying outward
         this.drops = Array.from({ length: 10 }, () => ({
           angle : Math.random() * Math.PI * 2,
@@ -472,20 +474,20 @@
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.alpha);
 
-        // Expanding ring
+        // Expanding ring (bubble's own color)
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.ring, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+        ctx.strokeStyle = this.color.stroke;
         ctx.lineWidth   = 2.5;
         ctx.stroke();
 
-        // Droplets
+        // Droplets (bubble's own color)
         this.drops.forEach(d => {
           const px = this.x + Math.cos(d.angle) * d.dist;
           const py = this.y + Math.sin(d.angle) * d.dist;
           ctx.beginPath();
           ctx.arc(px, py, Math.max(0.5, d.size * this.alpha), 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,0.88)';
+          ctx.fillStyle = this.color.stroke;
           ctx.fill();
         });
 
@@ -555,6 +557,18 @@
       }
     }
 
+    const COLORS = [
+      { fill: 'rgba(255,70,70,0.42)',   stroke: 'rgba(255,130,130,0.95)' },  // red
+      { fill: 'rgba(255,140,0,0.42)',   stroke: 'rgba(255,190,60,0.95)'  },  // orange
+      { fill: 'rgba(255,220,0,0.42)',   stroke: 'rgba(255,245,80,0.95)'  },  // yellow
+      { fill: 'rgba(60,200,80,0.42)',   stroke: 'rgba(110,235,120,0.95)' },  // green
+      { fill: 'rgba(50,160,255,0.42)',  stroke: 'rgba(110,205,255,0.95)' },  // blue
+      { fill: 'rgba(110,60,240,0.42)',  stroke: 'rgba(170,130,255,0.95)' },  // indigo
+      { fill: 'rgba(210,60,230,0.42)',  stroke: 'rgba(240,130,255,0.95)' },  // violet
+      { fill: 'rgba(255,215,0,0.50)',   stroke: 'rgba(255,235,120,0.98)' },  // gold
+      { fill: 'rgba(192,192,192,0.38)', stroke: 'rgba(230,230,230,0.98)' },  // silver
+    ];
+
     const bubbles = Array.from({ length: 60 }, () => new Bubble());
     const slices  = Array.from({ length: 10 }, () => new LemonSlice());
     const pops    = [];
@@ -563,7 +577,7 @@
     function tryPop(px, py) {
       for (const b of bubbles) {
         if (b.hits(px, py)) {
-          pops.push(new PopEffect(b.x, b.y, b.r));
+          pops.push(new PopEffect(b.x, b.y, b.r, b.color));
           b.init(false);   // respawn at bottom
           break;
         }
