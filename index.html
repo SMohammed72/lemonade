@@ -446,38 +446,105 @@
         this.alpha = Math.random() * 0.3 + 0.5;
         this.phase = Math.random() * Math.PI * 2;
         this.freq  = Math.random() * 0.012 + 0.004;
-        this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.isGold   = this.color === COLORS[7];
+        this.isSilver = this.color === COLORS[8];
+        // Special bubbles are larger and rise a little slower
+        if (this.isGold || this.isSilver) {
+          this.r  = Math.random() * 18 + 22;
+          this.vy = Math.random() * 0.4 + 0.18;
+        }
+        this.shimmer = Math.random() * Math.PI * 2; // for gold/silver shimmer animation
         this.popping = false;
       }
 
       update() {
-        this.phase += this.freq;
+        this.phase   += this.freq;
+        this.shimmer += 0.04;
         this.x += Math.sin(this.phase) * 0.7 + this.vx;
         this.y -= this.vy;
         if (this.y < -this.r * 3) this.init(false);
       }
 
       draw() {
+        const { x, y, r } = this;
         ctx.save();
         ctx.globalAlpha = this.alpha;
 
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle   = this.color.fill;
-        ctx.fill();
-        ctx.strokeStyle = this.color.stroke;
-        ctx.lineWidth   = 2.5;
-        ctx.stroke();
+        if (this.isGold || this.isSilver) {
+          // ── Outer halo glow ──────────────────
+          ctx.shadowBlur  = r * 2.2;
+          ctx.shadowColor = this.isGold
+            ? 'rgba(255,210,0,0.85)'
+            : 'rgba(190,210,255,0.85)';
 
-        // Specular highlight (always white for glass effect)
-        ctx.beginPath();
-        ctx.arc(
-          this.x - this.r * 0.32,
-          this.y - this.r * 0.32,
-          this.r * 0.28, 0, Math.PI * 2
-        );
-        ctx.fillStyle = 'rgba(255,255,255,0.92)';
-        ctx.fill();
+          // Halo ring
+          ctx.beginPath();
+          ctx.arc(x, y, r + 5, 0, Math.PI * 2);
+          ctx.strokeStyle = this.isGold
+            ? `rgba(255,220,80,${0.25 + Math.sin(this.shimmer) * 0.15})`
+            : `rgba(200,215,255,${0.25 + Math.sin(this.shimmer) * 0.15})`;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.shadowBlur = 0;
+
+          // Metallic radial-gradient fill
+          const shine = Math.sin(this.shimmer) * 0.12;
+          const grad  = ctx.createRadialGradient(
+            x - r * 0.35, y - r * 0.35, r * 0.05,
+            x, y, r
+          );
+          if (this.isGold) {
+            grad.addColorStop(0,            `rgba(255,255,200,${0.95 + shine})`);
+            grad.addColorStop(0.25 + shine, 'rgba(255,230,60,0.88)');
+            grad.addColorStop(0.6,          'rgba(220,160,0,0.72)');
+            grad.addColorStop(1,            'rgba(150,90,0,0.55)');
+          } else {
+            grad.addColorStop(0,            `rgba(255,255,255,${0.98 + shine})`);
+            grad.addColorStop(0.25 + shine, 'rgba(215,220,235,0.88)');
+            grad.addColorStop(0.6,          'rgba(160,168,190,0.72)');
+            grad.addColorStop(1,            'rgba(100,108,130,0.55)');
+          }
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Bright metallic stroke
+          ctx.strokeStyle = this.isGold
+            ? 'rgba(255,240,120,0.98)'
+            : 'rgba(230,235,255,0.98)';
+          ctx.lineWidth = 3;
+          ctx.stroke();
+
+          // Primary specular highlight
+          ctx.beginPath();
+          ctx.arc(x - r * 0.32, y - r * 0.32, r * 0.3, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.97)';
+          ctx.fill();
+
+          // Secondary small highlight
+          ctx.beginPath();
+          ctx.arc(x + r * 0.22, y + r * 0.18, r * 0.12, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.6)';
+          ctx.fill();
+
+        } else {
+          // ── Regular rainbow bubble ────────────
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle   = this.color.fill;
+          ctx.fill();
+          ctx.strokeStyle = this.color.stroke;
+          ctx.lineWidth   = 2.5;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(x - r * 0.32, y - r * 0.32, r * 0.28, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,0.92)';
+          ctx.fill();
+        }
 
         ctx.restore();
       }
@@ -491,24 +558,27 @@
     // ── Pop effect ───────────────────────────
     class PopEffect {
       constructor(x, y, r, color) {
-        this.x    = x;
-        this.y    = y;
+        this.x     = x;
+        this.y     = y;
         this.baseR = r;
         this.ring  = r;
+        this.ring2 = r * 0.5;   // second inner ring for specials
         this.alpha = 1;
         this.done  = false;
         this.color = color;
-        // Splash droplets flying outward
-        this.drops = Array.from({ length: 10 }, () => ({
+        this.isSpecial = (color === COLORS[7] || color === COLORS[8]);
+        const dropCount = this.isSpecial ? 16 : 10;
+        this.drops = Array.from({ length: dropCount }, () => ({
           angle : Math.random() * Math.PI * 2,
-          speed : Math.random() * 4 + 2,
+          speed : Math.random() * (this.isSpecial ? 6 : 4) + 2,
           dist  : r * 0.3,
-          size  : Math.random() * 5 + 2,
+          size  : Math.random() * (this.isSpecial ? 7 : 5) + 2,
         }));
       }
 
       update() {
         this.ring  += this.baseR * 0.18;
+        this.ring2 += this.baseR * 0.10;
         this.alpha -= 0.055;
         this.drops.forEach(d => { d.dist += d.speed; d.speed *= 0.92; });
         if (this.alpha <= 0) this.done = true;
@@ -519,14 +589,31 @@
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.alpha);
 
-        // Expanding ring (bubble's own color)
+        if (this.isSpecial) {
+          // Outer glow on the ring
+          ctx.shadowBlur  = 18;
+          ctx.shadowColor = this.color.stroke;
+        }
+
+        // Primary expanding ring
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.ring, 0, Math.PI * 2);
         ctx.strokeStyle = this.color.stroke;
-        ctx.lineWidth   = 2.5;
+        ctx.lineWidth   = this.isSpecial ? 3 : 2.5;
         ctx.stroke();
 
-        // Droplets (bubble's own color)
+        // Second inner ring for gold/silver
+        if (this.isSpecial) {
+          ctx.shadowBlur = 0;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.ring2, 0, Math.PI * 2);
+          ctx.strokeStyle = this.color.fill;
+          ctx.lineWidth   = 2;
+          ctx.stroke();
+        }
+
+        // Droplets
+        ctx.shadowBlur = 0;
         this.drops.forEach(d => {
           const px = this.x + Math.cos(d.angle) * d.dist;
           const py = this.y + Math.sin(d.angle) * d.dist;
