@@ -269,9 +269,54 @@
     footer strong { color: #c66000; font-size: 0.98rem; }
 
     @media (max-width: 600px) {
-      header h1 { font-size: 2rem; }
-      .info-grid { grid-template-columns: 1fr; }
-      .card { padding: 22px 20px; }
+      header {
+        padding: 12px 16px 10px;
+      }
+      .lemon-banner {
+        font-size: 1.4rem;
+        letter-spacing: 5px;
+        margin-bottom: 6px;
+      }
+      header h1 {
+        font-size: 1.35rem;
+        letter-spacing: 0;
+      }
+      header p.tagline {
+        display: none;
+      }
+      main {
+        padding: 16px 12px 36px;
+        gap: 12px;
+      }
+      .card {
+        padding: 16px 16px;
+        border-radius: 18px;
+      }
+      .card h2 {
+        font-size: 1.05rem;
+        margin-bottom: 10px;
+      }
+      .card p, .card li {
+        font-size: 0.9rem;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .info-item {
+        padding: 10px 14px;
+      }
+      .menu-item {
+        padding: 9px 0;
+      }
+      .hosts-row {
+        gap: 28px;
+        margin-top: 12px;
+      }
+      .host-desc {
+        font-size: 0.88rem;
+        margin-top: 12px;
+      }
     }
   </style>
 </head>
